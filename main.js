@@ -57,7 +57,7 @@ class Player {
   draw() {
     ctx.drawImage(
       this.currentSprite,
-      34 * this.frames,
+      34 * Math.floor(this.frames / 3),
       0,
       34,
       44,
@@ -120,8 +120,8 @@ const platformImage = new Image();
 platformImage.src = "platform.png";
 const backImage = new Image();
 backImage.src = "background.png";
-const hillImage = new Image();
-hillImage.src = "hills.png";
+// const hillImage = new Image();
+// hillImage.src = "hills.png";
 const smallPlatImage = new Image();
 smallPlatImage.src = "platformSmallTall.png";
 
@@ -176,11 +176,11 @@ function init() {
       y: -1,
       image: backImage,
     }),
-    new GenericObject({
-      x: -1,
-      y: -1,
-      image: hillImage,
-    }),
+    // new GenericObject({
+    //   x: -1,
+    //   y: -1,
+    //   image: hillImage,
+    // }),
   ];
 }
 
