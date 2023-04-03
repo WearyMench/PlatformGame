@@ -5,3 +5,22 @@ body {
     align-items: center;
     justify-content: center;
 }
+
+.phone {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    background-color: darkslategray;
+    color: antiquewhite;
+    text-align: center;
+}
+
+@media screen and (max-width: 1025px) {
+    .phone {
+        display: block;
+    }
+
+    #canvas1 {
+        display: none;
+    }
+}
