@@ -140,6 +140,11 @@ function init() {
       image: smallPlatImage,
     }),
     new Platform({
+      x: platformImage.width * 8,
+      y: 370,
+      image: smallPlatImage,
+    }),
+    new Platform({
       x: -1,
       y: 470,
       image: platformImage,
@@ -169,6 +174,16 @@ function init() {
       y: 470,
       image: platformImage,
     }),
+    new Platform({
+      x: platformImage.width * 9,
+      y: 470,
+      image: platformImage,
+    }),
+    new Platform({
+      x: platformImage.width * 10,
+      y: 470,
+      image: platformImage,
+    }),
   ];
   genericObjects = [
     new GenericObject({
@@ -176,11 +191,6 @@ function init() {
       y: -1,
       image: backImage,
     }),
-    // new GenericObject({
-    //   x: -1,
-    //   y: -1,
-    //   image: hillImage,
-    // }),
   ];
 }
 
@@ -277,7 +287,7 @@ function animate() {
   }
 
   //win condition
-  if (scrollOffset > platformImage.width * 7) {
+  if (scrollOffset > platformImage.width * 9) {
     console.log("you win!!!");
   }
 
@@ -301,9 +311,12 @@ addEventListener("keydown", (e) => {
       keys.left.pressed = true;
       lastKey = "left";
       break;
-    case "s":
-      console.log("work");
-      break;
+    // case "s":
+    //   if (player.position.y + player.height <= platform.position.y) {
+    //     // Solo aplica la velocidad hacia abajo si el personaje no está encima de la plataforma
+    //     player.velocity.y += 15;
+    //   }
+    //   break;
     case "w":
       player.velocity.y -= 15;
       break;
@@ -322,9 +335,9 @@ addEventListener("keyup", (e) => {
       keys.left.pressed = false;
       player.currentSprite = player.sprites.stand.left;
       break;
-    case "s":
-      console.log("work");
-      break;
+    // case "s":
+    //   player.velocity.y === 0;
+    //   break;
     // case "w":
     //   player.currentSprite = player.sprites.stand.right;
     //   break;
