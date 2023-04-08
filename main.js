@@ -1,16 +1,5 @@
 /**
- * HAremos un juego de plataforma basado en mario, donde:
- * 1.Habra un player _/
- * 2.gravedad _/
- * 3.player movement
- * 4.platforms
- * 5.scroll the background.
- * 6. win scenario
- * 7. image platforms
- * 8.parallax scroll
- * 9. death pits
- * 10. level creation
- * 11. fine-tuning
+ * HAremos un juego de plataforma basado en mario pero de un conejo buscando su zanahoria.
  */
 
 const canvas = document.getElementById("canvas1");
@@ -19,13 +8,17 @@ canvas.width = 1024;
 canvas.height = 576;
 
 const idleBunny = new Image();
-idleBunny.src = "IdleRight(34x44).png";
+idleBunny.src = "./img/IdleRight(34x44).png";
 const idleBunny2 = new Image();
-idleBunny2.src = "Idle (34x44).png";
+idleBunny2.src = "./img/Idle (34x44).png";
 const runBunny = new Image();
-runBunny.src = "RunRight(34x44).png";
+runBunny.src = "./img/RunRight(34x44).png";
 const runBunny2 = new Image();
-runBunny2.src = "Run (34x44).png";
+runBunny2.src = "./img/Run (34x44).png";
+const hitBunny = new Image();
+hitBunny.src = "./img/Hit (34x44).png";
+const hitBunny2 = new Image();
+hitBunny2.src = "./img/Hit2(34x44).png";
 
 const gravity = 0.5;
 class Player {
@@ -51,7 +44,12 @@ class Player {
         right: runBunny,
         left: runBunny2,
       },
+      hit: {
+        right: hitBunny2,
+        left: hitBunny,
+      },
     };
+    this.isHit = false;
     this.currentSprite = this.sprites.stand.right;
   }
   draw() {
@@ -77,6 +75,15 @@ class Player {
       this.frames = 0;
     else if (this.frames > 12 && this.currentSprite === this.sprites.run.left)
       this.frames = 0;
+
+    if (this.isHit) {
+      this.currentSprite = this.sprites.hit.left;
+      // if (this.frames > 5) {
+      //   this.frames = 0;
+      //   this.isHit = false;
+      // }
+    }
+
     this.draw();
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
@@ -116,18 +123,92 @@ class GenericObject {
   }
 }
 
+const turtleIdleIn = new Image();
+turtleIdleIn.src = "./img/Idle 2 (44x26).png";
+const turtleIdleOut = new Image();
+turtleIdleOut.src = "./img/Idle 1 (44x26).png";
+const turtleHit = new Image();
+turtleHit.src = "./img/Hit (44x26).png";
+
+class Enemies {
+  constructor({ x }) {
+    this.position = {
+      x,
+      y: 300,
+    };
+    this.velocity = {
+      x: 0,
+      y: 1,
+    };
+    this.width = 44;
+    this.height = 26;
+    this.frames = 0;
+    this.sprites = {
+      idle: {
+        in: turtleIdleIn,
+        out: turtleIdleOut,
+      },
+      hit: turtleHit,
+    };
+    this.currentSprite = this.sprites.idle.in;
+    this.idleTime = 0;
+    this.idleDuration = 140; // tiempo en frames para cambiar de idle in a idle out
+  }
+  draw() {
+    ctx.drawImage(
+      this.currentSprite,
+      44 * Math.floor(this.frames / 5),
+      0,
+      44,
+      26,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
+  }
+  update() {
+    this.frames++;
+
+    if (this.currentSprite === this.sprites.idle.in) {
+      this.idleTime++;
+      if (this.idleTime > this.idleDuration) {
+        this.currentSprite = this.sprites.idle.out;
+        this.idleTime = 0;
+      }
+    } else if (this.currentSprite === this.sprites.idle.out) {
+      this.idleTime++;
+      if (this.idleTime > this.idleDuration) {
+        this.currentSprite = this.sprites.idle.in;
+        this.idleTime = 0;
+      }
+    }
+
+    if (this.frames > 14 && this.currentSprite === this.sprites.idle.in)
+      this.frames = 0;
+    else if (this.frames > 14 && this.currentSprite === this.sprites.idle.out)
+      this.frames = 0;
+    else if (this.frames > 5 && this.currentSprite === this.sprites.hit)
+      this.frames = 0;
+    this.draw();
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
+    if (this.position.y + this.height + this.velocity.y <= canvas.height)
+      this.velocity.y += gravity;
+  }
+}
+
 const platformImage = new Image();
-platformImage.src = "platform.png";
+platformImage.src = "./img/platform.png";
 const backImage = new Image();
-backImage.src = "background.png";
-// const hillImage = new Image();
-// hillImage.src = "hills.png";
+backImage.src = "./img/background.png";
 const smallPlatImage = new Image();
-smallPlatImage.src = "platformSmallTall.png";
+smallPlatImage.src = "./img/platformSmallTall.png";
 
 let player = new Player();
 let platforms = [];
 let genericObjects = [];
+let enemies = [];
 let lastKey;
 
 function init() {
@@ -192,6 +273,20 @@ function init() {
       image: backImage,
     }),
   ];
+  enemies = [
+    new Enemies({
+      x: platformImage.width * 2 - 100,
+    }),
+    new Enemies({
+      x: platformImage.width * 3 + 150,
+    }),
+    new Enemies({
+      x: platformImage.width * 6,
+    }),
+    new Enemies({
+      x: platformImage.width * 8,
+    }),
+  ];
 }
 
 const keys = {
@@ -215,6 +310,11 @@ function animate() {
   platforms.forEach((platform) => {
     platform.draw();
   });
+
+  enemies.forEach((enemy) => {
+    enemy.update();
+  });
+
   player.update();
 
   if (keys.right.pressed && player.position.x < 400) {
@@ -227,13 +327,16 @@ function animate() {
   } else {
     player.velocity.x = 0;
 
-    if (keys.right.pressed) {
+    if (keys.right.pressed && scrollOffset < platformImage.width * 10 + 100) {
       scrollOffset += player.speed;
       platforms.forEach((platform) => {
         platform.position.x -= player.speed;
       });
       genericObjects.forEach((genericObject) => {
         genericObject.position.x -= player.speed * 0.66;
+      });
+      enemies.forEach((enemy) => {
+        enemy.position.x -= player.speed;
       });
     } else if (keys.left.pressed && scrollOffset > 0) {
       scrollOffset -= player.speed;
@@ -243,9 +346,13 @@ function animate() {
       genericObjects.forEach((genericObject) => {
         genericObject.position.x += player.speed * 0.66;
       });
+      enemies.forEach((enemy) => {
+        enemy.position.x += player.speed;
+      });
     }
   }
 
+  //Platforms collisions.
   platforms.forEach((platform) => {
     if (
       player.position.y + player.height <= platform.position.y &&
@@ -255,6 +362,51 @@ function animate() {
       player.position.x <= platform.position.x + platform.width
     ) {
       player.velocity.y = 0;
+    }
+
+    enemies.forEach((enemy) => {
+      if (
+        enemy.position.y + enemy.height <= platform.position.y &&
+        enemy.position.y + enemy.height + enemy.velocity.y >=
+          platform.position.y &&
+        enemy.position.x + enemy.width >= platform.position.x &&
+        enemy.position.x <= platform.position.x + platform.width
+      ) {
+        enemy.velocity.y = 0;
+      }
+    });
+  });
+
+  //Enemy collision
+
+  enemies.forEach((enemy) => {
+    if (
+      player.position.x + player.width >= enemy.position.x &&
+      player.position.x <= enemy.position.x + enemy.width &&
+      player.position.y + player.height >= enemy.position.y &&
+      enemy.currentSprite === enemy.sprites.idle.in
+    ) {
+      enemy.currentSprite = enemy.sprites.hit;
+      setTimeout(() => {
+        let index = enemies.indexOf(enemy);
+        enemies.splice(index, 1);
+      }, 200);
+    } else if (
+      player.position.x + player.width >= enemy.position.x &&
+      player.position.x <= enemy.position.x + enemy.width &&
+      player.position.y + player.height >= enemy.position.y &&
+      enemy.currentSprite === enemy.sprites.idle.out
+    ) {
+      player.isHit = true;
+      setTimeout(() => {
+        player.position.y += 1;
+      }, 200);
+    }
+
+    //Enemy movement
+
+    if (scrollOffset > enemy.position.x - platformImage.width) {
+      enemy.velocity.x = -1;
     }
   });
 
@@ -311,14 +463,11 @@ addEventListener("keydown", (e) => {
       keys.left.pressed = true;
       lastKey = "left";
       break;
-    // case "s":
-    //   if (player.position.y + player.height <= platform.position.y) {
-    //     // Solo aplica la velocidad hacia abajo si el personaje no está encima de la plataforma
-    //     player.velocity.y += 15;
-    //   }
-    //   break;
+    case "s":
+      break;
     case "w":
       player.velocity.y -= 15;
+      // console.log(player.velocity.y);
       break;
 
     default:
@@ -335,12 +484,13 @@ addEventListener("keyup", (e) => {
       keys.left.pressed = false;
       player.currentSprite = player.sprites.stand.left;
       break;
-    // case "s":
-    //   player.velocity.y === 0;
-    //   break;
-    // case "w":
-    //   player.currentSprite = player.sprites.stand.right;
-    //   break;
+    case "s":
+      // player.velocity.y = 0;
+      break;
+    case "w":
+      // player.velocity.y += 4;
+      // player.currentSprite = player.sprites.stand.right;
+      break;
 
     default:
       break;
