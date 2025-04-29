@@ -1,21 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Platform Game</title>
+    <link
+      rel="shortcut icon"
+      href="./img/logo_rabbit.png"
+      type="image/x-icon"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rabid rabbit</title>
-    <link rel="shortcut icon" href="./img/logo_rabbit.png" type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-    <canvas id="canvas1"></canvas>
-    <div class="phone">
-        <h1>For a better experience, open the game on a PC. +1024px</h1>
+  <body>
+    <div id="startScreen" class="start-screen">
+      <div class="retro-container">
+        <h1 class="retro-title">PLATFORM GAME</h1>
+        <div class="retro-border">
+          <div class="retro-content">
+            <div class="character-section">
+              <div class="character-container">
+                <canvas id="characterCanvas" width="176" height="104"></canvas>
+              </div>
+              <div class="character-label">ENEMY</div>
+            </div>
+            <div class="controls-section">
+              <button id="startButton" class="retro-button">
+                <span class="button-text">START GAME</span>
+                <span class="button-arrow">▶</span>
+              </button>
+              <div class="retro-instructions">
+                <p>ARROWS: MOVE</p>
+                <p>SPACE: JUMP</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <script src="main.js"></script>
-</body>
 
+    <div id="gameOverScreen" class="hidden">
+      <h1>Game Over</h1>
+      <button id="restartButton">Try Again</button>
+    </div>
+
+    <div id="gameUI">
+      <div id="livesDisplay">LIVES: 3</div>
+      <button id="pauseButton" class="retro-button small">
+        <span class="button-text">PAUSE</span>
+      </button>
+      <button id="exitButton" class="retro-button small">
+        <span class="button-text">EXIT</span>
+      </button>
+    </div>
+
+    <div class="game-container">
+      <canvas id="canvas1"></canvas>
+      <!-- Mobile Controls -->
+      <div class="mobile-controls">
+        <div class="d-pad">
+          <button class="mobile-button left">←</button>
+          <button class="mobile-button right">→</button>
+        </div>
+        <button class="mobile-button jump">JUMP</button>
+      </div>
+    </div>
+
+    <script type="module" src="src/game.js"></script>
+  </body>
 </html>

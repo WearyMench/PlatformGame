@@ -1,26 +1,379 @@
 body {
-    height: 100vh;
-    background: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  height: 100vh;
+  background: linear-gradient(45deg, #1a1a2e, #16213e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+/* Retro Gaming Styles */
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+.start-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #1a1a2e, #16213e);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-.phone {
+.retro-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.retro-title {
+  font-family: "Press Start 2P", cursive;
+  color: #ffd700;
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.retro-border {
+  border: 2px solid #ffd700;
+  padding: 2px;
+  background: #000;
+}
+
+.retro-content {
+  border: 2px solid #ff0000;
+  padding: 20px;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.character-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.character-container {
+  position: relative;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid #ffd700;
+  border-radius: 5px;
+}
+
+#characterCanvas {
+  image-rendering: pixelated;
+  transform: scale(1);
+  margin: 0;
+  border: none;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+.character-label {
+  font-family: "Press Start 2P", cursive;
+  color: #ffd700;
+  font-size: 0.8em;
+  text-shadow: 2px 2px 0px #ff0000;
+  letter-spacing: 2px;
+  padding: 5px 10px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid #ffd700;
+  border-radius: 3px;
+}
+
+.controls-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.retro-button {
+  font-family: "Press Start 2P", cursive;
+  background: #000;
+  color: #ffd700;
+  border: 2px solid #ffd700;
+  padding: 8px 15px;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.retro-button:hover {
+  background: #ffd700;
+  color: #000;
+}
+
+.retro-button.small {
+  padding: 5px 10px;
+  font-size: 0.7em;
+}
+
+.retro-instructions {
+  font-family: "Press Start 2P", cursive;
+  color: #fff;
+  font-size: 0.8em;
+  line-height: 1.8;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px 20px;
+  border: 1px solid #ffd700;
+  border-radius: 3px;
+}
+
+.retro-instructions p {
+  margin: 5px 0;
+  text-shadow: 2px 2px 0px #ff0000;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700, 0 0 15px #ff0000;
+  }
+  to {
+    text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 30px #ff0000;
+  }
+}
+
+/* Hide start screen when game starts */
+.start-screen.hidden {
+  display: none;
+}
+
+.game-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-controls {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 100;
+}
+
+#canvas1 {
+  border: 4px solid #ffd700;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  background: #000;
+}
+
+/* Pause Screen */
+.pause-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.pause-screen.active {
+  display: flex;
+}
+
+.pause-content {
+  background: #000;
+  border: 4px solid #ffd700;
+  padding: 30px;
+  text-align: center;
+}
+
+.pause-title {
+  font-family: "Press Start 2P", cursive;
+  color: #ffd700;
+  font-size: 2em;
+  margin-bottom: 30px;
+  text-shadow: 4px 4px 0px #ff0000;
+}
+
+.pause-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+#gameOverScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+#gameOverScreen h1 {
+  color: #ff0000;
+  font-family: "Press Start 2P", cursive;
+  font-size: 3em;
+  margin-bottom: 1em;
+}
+
+#gameOverScreen button {
+  font-family: "Press Start 2P", cursive;
+  padding: 10px 20px;
+  font-size: 1em;
+  background-color: #ff0000;
+  color: #ffd700;
+  border: 2px solid #ffd700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+#gameOverScreen button:hover {
+  background-color: #ffd700;
+  color: #ff0000;
+}
+
+#gameUI {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  gap: 20px;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#livesDisplay {
+  color: #ffd700;
+  font-family: "Press Start 2P", cursive;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#livesDisplay::before {
+  content: "❤";
+  color: #ff0000;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Animations */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    text-shadow: 0 0 10px #ff0000;
+  }
+  50% {
+    transform: scale(1.1);
+    text-shadow: 0 0 20px #ff0000;
+  }
+  100% {
+    transform: scale(1);
+    text-shadow: 0 0 10px #ff0000;
+  }
+}
+
+/* Mobile Controls */
+.mobile-controls {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  z-index: 100;
+}
+
+.d-pad {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.mobile-button {
+  font-family: "Press Start 2P", cursive;
+  background: rgba(0, 0, 0, 0.7);
+  color: #ffd700;
+  border: 2px solid #ffd700;
+  padding: 15px 25px;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: all 0.2s;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-button:active {
+  background: #ffd700;
+  color: #000;
+}
+
+.mobile-button.jump {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  padding: 15px 30px;
+}
+
+.mobile-instructions {
+  display: none;
+}
+
+/* Mobile Layout */
+@media screen and (max-width: 1024px) {
+  .phone {
     display: none;
+  }
+
+  .mobile-controls {
+    display: flex;
+  }
+
+  .mobile-instructions {
+    display: block;
+  }
+
+  #gameUI {
+    top: 10px;
+    left: 10px;
+    padding: 5px;
+  }
+
+  .retro-button {
+    padding: 5px 10px;
+    font-size: 0.7em;
+  }
+
+  #livesDisplay {
+    font-size: 0.8em;
+  }
+
+  .game-container {
+    position: relative;
     width: 100%;
     height: 100vh;
-    background-color: darkslategray;
-    color: antiquewhite;
-    text-align: center;
-}
+    overflow: hidden;
+  }
 
-@media screen and (max-width: 1025px) {
-    .phone {
-        display: block;
-    }
-
-    #canvas1 {
-        display: none;
-    }
+  #canvas1 {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
 }
