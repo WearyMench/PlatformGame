@@ -533,6 +533,7 @@ async function init() {
       width: 60, // Frame width
       height: 60, // Frame height
       isFlag: true, // Enable flag animation
+      parallaxFactor: 0.5, // Slower parallax for background
     });
     genericObjects.push(finishFlag);
 
@@ -994,7 +995,7 @@ async function init() {
       }),
       new GenericObject({
         x: 1900,
-        y: 280,
+        y: 250,
         image: silverCoinImage,
         scale: 1,
         isCollectible: true,
@@ -1015,7 +1016,7 @@ async function init() {
       // Gold coins (2000 points)
       new GenericObject({
         x: 2300,
-        y: 320,
+        y: 100,
         image: goldCoinImage,
         scale: 1,
         isCollectible: true,
@@ -1035,7 +1036,7 @@ async function init() {
       }),
       new GenericObject({
         x: 2600,
-        y: 350,
+        y: 170,
         image: goldCoinImage,
         scale: 1,
         isCollectible: true,
@@ -1056,7 +1057,7 @@ async function init() {
       // Red coins (5000 points)
       new GenericObject({
         x: 2950,
-        y: 400,
+        y: 200,
         image: redCoinImage,
         scale: 1,
         isCollectible: true,
@@ -1076,7 +1077,7 @@ async function init() {
       }),
       new GenericObject({
         x: 3350,
-        y: 420,
+        y: 400,
         image: redCoinImage,
         scale: 1,
         isCollectible: true,
