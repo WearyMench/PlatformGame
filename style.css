@@ -168,21 +168,17 @@ body {
 }
 
 /* Pause Screen */
-.pause-screen {
+#pauseScreen {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.8);
-  display: none;
+  display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-}
-
-.pause-screen.active {
-  display: flex;
 }
 
 .pause-content {
@@ -190,12 +186,13 @@ body {
   border: 4px solid #ffd700;
   padding: 30px;
   text-align: center;
+  min-width: 300px;
 }
 
 .pause-title {
   font-family: "Press Start 2P", cursive;
   color: #ffd700;
-  font-size: 2em;
+  font-size: 1.5em;
   margin-bottom: 30px;
   text-shadow: 4px 4px 0px #ff0000;
 }
@@ -204,6 +201,32 @@ body {
   display: flex;
   gap: 20px;
   justify-content: center;
+  margin-top: 30px;
+}
+
+.pause-buttons .retro-button {
+  min-width: 120px;
+}
+
+/* Volume Controls in Pause Menu */
+#pauseScreen .volume-controls {
+  margin: 20px 0;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid #ffd700;
+  border-radius: 8px;
+}
+
+#pauseScreen .volume-controls-container {
+  margin-top: 10px;
+}
+
+#pauseScreen .volume-slider-container {
+  margin: 10px 0;
+}
+
+#pauseScreen .volume-text {
+  font-size: 0.7em;
 }
 
 #gameOverScreen {
@@ -262,6 +285,36 @@ body {
   display: flex;
   align-items: center;
   gap: 5px;
+}
+
+#timerDisplay {
+  color: #ffd700;
+  font-family: "Press Start 2P", cursive;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-shadow: 2px 2px 0px #ff0000;
+}
+
+#timerDisplay::before {
+  content: "⏱";
+  color: #ff0000;
+}
+
+#scoreDisplay {
+  color: #ffd700;
+  font-family: "Press Start 2P", cursive;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-shadow: 2px 2px 0px #ff0000;
+}
+
+#scoreDisplay::before {
+  content: "⭐";
+  color: #ff0000;
 }
 
 #livesDisplay::before {
@@ -375,5 +428,162 @@ body {
     width: 100%;
     height: 100%;
     object-fit: contain;
+  }
+}
+
+/* Volume Controls */
+.volume-controls {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+}
+
+.volume-controls-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.volume-slider-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+
+.volume-slider-container label {
+  font-family: "Press Start 2P", cursive;
+  font-size: 12px;
+  color: #fff;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.volume-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: #4a4a4a;
+  outline: none;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  background: #e0e0e0;
+}
+
+.volume-text {
+  color: white;
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.6em;
+  min-width: 60px;
+  text-shadow: 1px 1px 0px #ff0000;
+}
+
+.button.small {
+  padding: 8px 12px;
+  font-size: 16px;
+}
+
+/* Mute button states */
+.button.small.muted .button-text {
+  content: "🔇";
+}
+
+#testSoundButton,
+#pauseTestSoundButton {
+  background: #4a90e2;
+  border: 2px solid #2c5282;
+  color: white;
+  padding: 8px 16px;
+  font-family: "Press Start 2P", cursive;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-shadow: 2px 2px 0 #000;
+  box-shadow: 2px 2px 0 #000;
+}
+
+#testSoundButton:hover,
+#pauseTestSoundButton:hover {
+  background: #357abd;
+  transform: translateY(-2px);
+}
+
+#testSoundButton:active,
+#pauseTestSoundButton:active {
+  transform: translateY(0);
+  box-shadow: 1px 1px 0 #000;
+}
+
+/* Level Completion Screen */
+.completion-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.completion-content {
+  background: #000;
+  border: 4px solid #ffd700;
+  padding: 30px;
+  text-align: center;
+  min-width: 300px;
+  animation: glow 2s infinite;
+}
+
+.completion-content h2 {
+  font-family: "Press Start 2P", cursive;
+  color: #ffd700;
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  text-shadow: 4px 4px 0px #ff0000;
+}
+
+.completion-content p {
+  font-family: "Press Start 2P", cursive;
+  color: #fff;
+  font-size: 1em;
+  margin: 15px 0;
+  text-shadow: 2px 2px 0px #ff0000;
+}
+
+.completion-content .retro-button {
+  margin: 10px;
+  min-width: 150px;
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
+  }
+  50% {
+    box-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700;
+  }
+  100% {
+    box-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
   }
 }

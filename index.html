@@ -39,6 +39,36 @@
                 <p>SPACE: JUMP</p>
               </div>
             </div>
+            <div class="volume-controls">
+              <div class="volume-controls-container">
+                <div class="volume-slider-container">
+                  <label for="musicVolumeSlider">Music</label>
+                  <input
+                    type="range"
+                    id="musicVolumeSlider"
+                    min="0"
+                    max="100"
+                    value="70"
+                  />
+                </div>
+                <div class="volume-slider-container">
+                  <label for="sfxVolumeSlider">SFX</label>
+                  <input
+                    type="range"
+                    id="sfxVolumeSlider"
+                    min="0"
+                    max="100"
+                    value="70"
+                  />
+                </div>
+                <button id="testSoundButton" class="button">
+                  <span class="button-text">Test SFX</span>
+                </button>
+                <button id="muteButton" class="button">
+                  <span class="button-text">🔊</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -49,8 +79,54 @@
       <button id="restartButton">Try Again</button>
     </div>
 
+    <div id="pauseScreen" class="hidden">
+      <div class="pause-content">
+        <h2 class="pause-title">PAUSED</h2>
+        <div class="volume-controls">
+          <div class="volume-controls-container">
+            <div class="volume-slider-container">
+              <label for="pauseMusicVolumeSlider">Music</label>
+              <input
+                type="range"
+                id="pauseMusicVolumeSlider"
+                min="0"
+                max="100"
+                value="70"
+              />
+            </div>
+            <div class="volume-slider-container">
+              <label for="pauseSfxVolumeSlider">SFX</label>
+              <input
+                type="range"
+                id="pauseSfxVolumeSlider"
+                min="0"
+                max="100"
+                value="70"
+              />
+            </div>
+            <button id="pauseTestSoundButton" class="button">
+              <span class="button-text">Test SFX</span>
+            </button>
+            <button id="pauseMuteButton" class="button">
+              <span class="button-text">🔊</span>
+            </button>
+          </div>
+        </div>
+        <div class="pause-buttons">
+          <button id="resumeButton" class="retro-button">
+            <span class="button-text">RESUME</span>
+          </button>
+          <button id="pauseExitButton" class="retro-button">
+            <span class="button-text">EXIT</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div id="gameUI">
       <div id="livesDisplay">LIVES: 3</div>
+      <div id="timerDisplay">TIME: 0.0s</div>
+      <div id="scoreDisplay">SCORE: 0</div>
       <button id="pauseButton" class="retro-button small">
         <span class="button-text">PAUSE</span>
       </button>

@@ -146,15 +146,21 @@ export class Player {
     enemies.forEach((enemy) => {
       if (
         this.position.x + this.width * this.scale >= enemy.position.x &&
-        this.position.x <= enemy.position.x + enemy.width &&
+        this.position.x <= enemy.position.x + enemy.width * enemy.scale &&
         this.position.y + this.height * this.scale >= enemy.position.y &&
-        this.position.y <= enemy.position.y + enemy.height
+        this.position.y <= enemy.position.y + enemy.height * enemy.scale
       ) {
-        const gameOver = this.takeDamage();
-        if (gameOver) {
-          // Trigger game over
-          const event = new CustomEvent("gameOver");
-          window.dispatchEvent(event);
+        if (enemy.hasPikes()) {
+          // If enemy has pikes, player takes damage
+          const gameOver = this.takeDamage();
+          if (gameOver) {
+            // Trigger game over
+            const event = new CustomEvent("gameOver");
+            window.dispatchEvent(event);
+          }
+        } else {
+          // If enemy doesn't have pikes, enemy takes damage
+          enemy.takeHit();
         }
       }
     });
