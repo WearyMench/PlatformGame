@@ -403,18 +403,31 @@ body {
   }
 
   #gameUI {
+    position: fixed;
     top: 10px;
     left: 10px;
+    right: 10px;
     padding: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
   }
 
-  .retro-button {
+  #gameUI .retro-button {
     padding: 5px 10px;
     font-size: 0.7em;
+    margin: 0;
   }
 
-  #livesDisplay {
+  #livesDisplay,
+  #timerDisplay,
+  #scoreDisplay {
     font-size: 0.8em;
+    margin: 0;
   }
 
   .game-container {
