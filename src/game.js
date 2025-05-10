@@ -1116,7 +1116,7 @@ async function init() {
         initialY: 380,
       }),
       new GenericObject({
-        x: 4150,
+        x: 4100,
         y: 250,
         image: redCoinImage,
         scale: 1,

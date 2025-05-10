@@ -22,7 +22,6 @@ export class Platform {
     );
   }
 }
-
 export class GenericObject {
   constructor({
     x,
@@ -34,6 +33,7 @@ export class GenericObject {
     width,
     height,
     isFlag = false,
+    value = 0, // Add value for collectibles
   }) {
     this.position = {
       x,
@@ -48,6 +48,7 @@ export class GenericObject {
     this.parallaxFactor = parallaxFactor;
     this.isCollectible = isCollectible;
     this.isFlag = isFlag;
+    this.value = value; // Store the value for collectibles
 
     // Animation properties
     this.frames = 0;
