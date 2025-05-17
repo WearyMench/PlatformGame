@@ -522,7 +522,7 @@ async function init() {
     player.sprites.hit.left = sprites.hitBunny;
     player.currentSprite = player.sprites.stand.right;
 
-    // Create platforms
+    // Create platforms with procedural generation
     const platformImage = await loadImage("./img/platform.png");
     const flagImage = await loadImage("./img/flag.png"); // Add flag image
     finishFlag = new GenericObject({
@@ -537,154 +537,103 @@ async function init() {
     });
     genericObjects.push(finishFlag);
 
-    platforms = [
-      // Left wall to prevent falling
-      new Platform({
-        x: -200,
-        y: 470,
-        image: platformImage,
-        scale: 2,
-      }),
-      // Starting area - safe ground
-      new Platform({
-        x: -1,
-        y: 470,
-        image: platformImage,
-        scale: 2,
-      }),
-      new Platform({
-        x: 400,
-        y: 470,
-        image: platformImage,
-        scale: 2,
-      }),
-      // First challenge - small gap
-      new Platform({
-        x: 700,
-        y: 470,
-        image: platformImage,
-        scale: 2,
-      }),
-      // First elevated section
-      new Platform({
-        x: 900,
-        y: 400,
-        image: platformImage,
-        scale: 2,
-      }),
-      // Gap to test jump timing
-      new Platform({
-        x: 1100,
-        y: 400,
-        image: platformImage,
-        scale: 2,
-      }),
-      // Higher platform requiring precise jump
-      new Platform({
-        x: 1300,
-        y: 350,
-        image: platformImage,
-        scale: 2,
-      }),
-      // Small platform to test landing
-      new Platform({
-        x: 1500,
-        y: 350,
-        image: platformImage,
-        scale: 1,
-      }),
-      // Gap with higher platform
-      new Platform({
-        x: 1700,
-        y: 300,
-        image: platformImage,
-        scale: 2,
-      }),
-      // Descending platforms
-      new Platform({
-        x: 1900,
-        y: 320,
-        image: platformImage,
-        scale: 2,
-      }),
-      new Platform({
-        x: 2100,
-        y: 340,
-        image: platformImage,
-        scale: 2,
-      }),
-      // Final challenge - multiple small platforms
-      new Platform({
-        x: 2300,
-        y: 360,
-        image: platformImage,
-        scale: 1,
-      }),
-      new Platform({
-        x: 2450,
-        y: 380,
-        image: platformImage,
-        scale: 1,
-      }),
-      new Platform({
-        x: 2600,
-        y: 400,
-        image: platformImage,
-        scale: 1,
-      }),
-      // Final platform
-      new Platform({
-        x: 2750,
-        y: 420,
-        image: platformImage,
-        scale: 2,
-      }),
-      // Extended platforms for more gameplay
-      new Platform({
-        x: 2950,
-        y: 440,
-        image: platformImage,
-        scale: 2,
-      }),
-      new Platform({
-        x: 3150,
-        y: 460,
-        image: platformImage,
-        scale: 2,
-      }),
-      // Additional extended platforms
-      new Platform({
-        x: 3350,
-        y: 470,
-        image: platformImage,
-        scale: 2,
-      }),
-      new Platform({
-        x: 3550,
-        y: 450,
-        image: platformImage,
-        scale: 2,
-      }),
-      new Platform({
-        x: 3750,
-        y: 430,
-        image: platformImage,
-        scale: 2,
-      }),
-      new Platform({
-        x: 3950,
-        y: 410,
-        image: platformImage,
-        scale: 2,
-      }),
-      // Final platform with extra width
+    // Procedural platform generation parameters
+    const numPlatforms = 24;
+    const startX = -200;
+    const startY = 470;
+    const minHorizontalGap = 150;
+    const maxHorizontalGap = 300;
+    const minVerticalGap = -80; // negative = can go up
+    const maxVerticalGap = 60;  // positive = can go down
+    const minY = 200;
+    const maxY = 470;
+    const baseScale = 2;
+    const smallScale = 1;
+    const largeScale = 3;
+    const platformWidth = platformImage.width * baseScale;
+
+    platforms = [];
+    let prevX = startX;
+    let prevY = startY;
+    let prevScale = baseScale;
+    for (let i = 0; i < numPlatforms; i++) {
+      // Special cases for start, end, and certain indices
+      let scale = baseScale;
+      if (i === 0) {
+        // Left wall
+        platforms.push(new Platform({
+          x: startX,
+          y: startY,
+          image: platformImage,
+          scale: baseScale,
+        }));
+        prevX = startX;
+        prevY = startY;
+        prevScale = baseScale;
+        continue;
+      }
+      if (i === 1) {
+        // Starting safe ground
+        platforms.push(new Platform({
+          x: -1,
+          y: startY,
+          image: platformImage,
+          scale: baseScale,
+        }));
+        prevX = -1;
+        prevY = startY;
+        prevScale = baseScale;
+        continue;
+      }
+      // Randomize scale for variety
+      if (i % 7 === 0) scale = largeScale;
+      else if (i % 5 === 0) scale = smallScale;
+
+      // Randomize horizontal and vertical gaps
+      let gapX = Math.floor(
+        Math.random() * (maxHorizontalGap - minHorizontalGap + 1)
+      ) + minHorizontalGap;
+      let gapY = Math.floor(
+        Math.random() * (maxVerticalGap - minVerticalGap + 1)
+      ) + minVerticalGap;
+
+      // For 'mountainous' regions, bias gapY to go up or down for a few platforms
+      if (i > 5 && i < 10) gapY = Math.abs(gapY); // go up
+      if (i > 10 && i < 15) gapY = -Math.abs(gapY); // go down
+
+      // Calculate new position
+      let x = prevX + platformWidth + gapX;
+      let y = Math.max(minY, Math.min(prevY + gapY, maxY));
+
+      // Prevent vertical overlap/stacking: ensure y differs enough from previous
+      if (Math.abs(y - prevY) < 40) {
+        y = prevY + (gapY > 0 ? 40 : -40);
+        y = Math.max(minY, Math.min(y, maxY));
+      }
+
+      // Add platform
+      platforms.push(
+        new Platform({
+          x,
+          y,
+          image: platformImage,
+          scale,
+        })
+      );
+      prevX = x;
+      prevY = y;
+      prevScale = scale;
+    }
+
+    // Add a final wide platform for the goal
+    platforms.push(
       new Platform({
         x: 4150,
         y: 400,
         image: platformImage,
-        scale: 3,
-      }),
-    ];
+        scale: largeScale,
+      })
+    );
 
     // Create generic objects (background with parallax)
     const backgroundImage = await loadImage("./img/background.png");
@@ -698,61 +647,57 @@ async function init() {
       }),
     ];
 
-    // Create enemies and load their images
-    enemies = [
-      new Enemies({
-        x: 900, // On first elevated section
-        y: 400 - 26 * 2, // Position exactly on platform
+    // Create enemies with initial x positions, will align to platforms below
+    const enemyXPositions = [900, 1300, 1700, 2300];
+    enemies = enemyXPositions.map((x, idx) => {
+      return new Enemies({
+        x: x,
+        y: 0, // Temporary, will be set after platform alignment
         canvas,
         moveDistance: 100,
-        platformStart: 900,
-        platformEnd: 1000,
         scale: 2,
         width: 44,
         height: 26,
-      }),
-      new Enemies({
-        x: 1300,
-        y: 350 - 26 * 2,
-        canvas,
-        moveDistance: 100,
-        platformStart: 1300,
-        platformEnd: 1400,
-        scale: 2,
-        width: 44,
-        height: 26,
-      }),
-      new Enemies({
-        x: 1700,
-        y: 300 - 26 * 2,
-        canvas,
-        moveDistance: 100,
-        platformStart: 1700,
-        platformEnd: 1800,
-        scale: 2,
-        width: 44,
-        height: 26,
-      }),
-      new Enemies({
-        x: 2300,
-        y: 360 - 26 * 2,
-        canvas,
-        moveDistance: 100,
-        platformStart: 2300,
-        platformEnd: 2400,
-        scale: 2,
-        width: 44,
-        height: 26,
-      }),
-    ];
+      });
+    });
+
+    // Align each enemy to the top of the nearest platform beneath their x position
+    function alignEnemiesToPlatforms(enemies, platforms) {
+      enemies.forEach((enemy) => {
+        // Find the platform directly under the enemy's x
+        let closestPlatform = null;
+        let minDist = Infinity;
+        platforms.forEach((platform) => {
+          const px = platform.position.x;
+          const pw = platform.width;
+          // Enemy must be horizontally on the platform
+          if (enemy.position.x >= px && enemy.position.x <= px + pw) {
+            // Prefer the highest platform (lowest y)
+            if (!closestPlatform || platform.position.y < closestPlatform.position.y) {
+              closestPlatform = platform;
+            }
+          }
+        });
+        if (closestPlatform) {
+          // Place enemy so feet are on platform
+          enemy.position.y = closestPlatform.position.y - enemy.height * enemy.scale;
+          enemy.initialY = enemy.position.y;
+        } else {
+          // If no platform below, place offscreen (fail-safe)
+          enemy.position.y = 10000;
+          enemy.initialY = 10000;
+        }
+      });
+    }
+
+    alignEnemiesToPlatforms(enemies, platforms);
 
     // Load enemy images and wait for them to be ready
     await Promise.all(
       enemies.map(async (enemy) => {
         await enemy.loadImage();
-        // Set initial sprite and position
+        // Set initial sprite
         enemy.currentSprite = enemy.sprites.idle1;
-        enemy.position.y = enemy.initialY;
         enemy.velocity.y = 0;
       })
     );
@@ -904,6 +849,28 @@ async function init() {
       if (wasInAir && this.isOnGround) {
         soundManager.play("land");
       }
+
+      // --- Player fall-off mechanic ---
+      const fallThreshold = canvas.height + 100;
+      if (this.position.y > fallThreshold && !gameOver && gameStarted) {
+        // Subtract a life and reset position
+        const lost = this.takeDamage();
+        updateLivesDisplay();
+        soundManager.play("death");
+        // Reset to spawn
+        this.position.x = 100;
+        this.position.y = 100;
+        this.velocity.x = 0;
+        this.velocity.y = 0;
+        this.isOnGround = false;
+        // Optionally, add a short delay or animation here if desired
+        if (lost) {
+          // If lives reach zero, trigger game over
+          const event = new CustomEvent("gameOver");
+          window.dispatchEvent(event);
+        }
+      }
+      // --- End fall-off mechanic ---
     };
 
     // Initialize game state
